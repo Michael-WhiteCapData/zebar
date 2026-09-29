@@ -4,6 +4,8 @@ mkdir -p linux-settings-evidence
 evidence="$PWD/linux-settings-evidence"
 exec > >(tee "$evidence/verification.log") 2>&1
 export WEBKIT_DISABLE_DMABUF_RENDERER=1
+export WEBKIT_DISABLE_COMPOSITING_MODE=1
+export LIBGL_ALWAYS_SOFTWARE=1
 deb=$(find target/debug/bundle/deb -name '*.deb' -print -quit)
 sudo dpkg -i "$deb"
 config=$(mktemp -d)
@@ -20,9 +22,9 @@ cat >"$config/settings-test/zpack.json" <<'EOF'
 EOF
 printf '<html><body>Startup control widget</body></html>' >"$config/settings-test/index.html"
 sleep 2
-zebar open-settings --config-dir "$config" >"$evidence/zebar.log" 2>&1 &
-app_pid=$!
+gdb --batch -ex run -ex 'thread apply all bt' --args zebar open-settings --config-dir "$config" >"$evidence/zebar.log" 2>&1 &
 settings=$(timeout 60 xdotool search --sync --onlyvisible --name '^Settings - Zebar$' | head -1)
+app_pid=$(xdotool getwindowpid "$settings")
 sleep 3
 kill -0 "$app_pid"
 if xdotool search --onlyvisible --name '^Zebar - settings-test / test$'; then
