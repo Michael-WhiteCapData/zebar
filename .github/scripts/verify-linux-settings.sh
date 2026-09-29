@@ -29,6 +29,7 @@ if xdotool search --onlyvisible --name '^Zebar - settings-test / test$'; then
   echo 'FAIL: cold settings launch started the configured widget'; exit 1
 fi
 import -window root "$evidence/cold-settings.png"
+import -window "$settings" "$evidence/cold-window.png"
 xdotool windowminimize "$settings"
 sleep 1
 xprop -id "$settings" WM_STATE | tee "$evidence/minimized.txt"
@@ -39,6 +40,7 @@ test "$(xdotool search --onlyvisible --name '^Settings - Zebar$' | head -1)" = "
 test "$(xdotool getactivewindow)" = "$settings"
 kill -0 "$app_pid"
 import -window root "$evidence/restored-settings.png"
+import -window "$settings" "$evidence/restored-window.png"
 desktop=/usr/share/applications/zebar-settings.desktop
 cp "$desktop" "$evidence/zebar-settings.desktop"
 desktop-file-validate "$desktop"
