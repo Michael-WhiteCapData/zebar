@@ -58,7 +58,8 @@ extern crate rocket;
 /// subcommand.
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-  // GTK and Tao's device thread both use X11, so initialize its locks first.
+  // GTK and Tao's device thread both use X11, so initialize its locks
+  // first.
   #[cfg(target_os = "linux")]
   if env::var_os("DISPLAY").is_some() {
     let xlib = x11_dl::xlib::Xlib::open()?;
