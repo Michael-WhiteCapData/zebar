@@ -346,7 +346,7 @@ fn setup_single_instance(
       let app_handle = app_handle.clone();
       let widget_factory = widget_factory.clone();
 
-      task::spawn(async move {
+      tauri::async_runtime::spawn(async move {
         let res = match Cli::try_parse_from(args) {
           Ok(cli) => {
             // No-op if no subcommand is provided and widgets are still
