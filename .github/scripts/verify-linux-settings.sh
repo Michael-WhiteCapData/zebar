@@ -4,7 +4,8 @@ mkdir -p linux-settings-evidence
 evidence="$PWD/linux-settings-evidence"
 exec > >(tee "$evidence/verification.log") 2>&1
 export WEBKIT_DISABLE_DMABUF_RENDERER=1
-export PATH="$PWD/target/debug:$PATH"
+deb=$(find target/debug/bundle/deb -name '*.deb' -print -quit)
+sudo dpkg -i "$deb"
 config=$(mktemp -d)
 openbox >"$evidence/openbox.log" 2>&1 &
 wm_pid=$!
@@ -38,9 +39,8 @@ test "$(xdotool search --onlyvisible --name '^Settings - Zebar$' | head -1)" = "
 test "$(xdotool getactivewindow)" = "$settings"
 kill -0 "$app_pid"
 import -window root "$evidence/restored-settings.png"
-deb=$(find target/debug/bundle/deb -name '*.deb' -print -quit)
-dpkg-deb -x "$deb" "$evidence/package"
-desktop="$evidence/package/usr/share/applications/zebar-settings.desktop"
+desktop=/usr/share/applications/zebar-settings.desktop
+cp "$desktop" "$evidence/zebar-settings.desktop"
 desktop-file-validate "$desktop"
 grep -Fx 'Exec=zebar open-settings' "$desktop"
 xdotool windowminimize "$settings"
