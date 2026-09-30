@@ -11,6 +11,7 @@ function isIntercepted(request) {
     setTimeout,
     self: {
       location: { origin: 'http://127.0.0.1:6124' },
+      clients: { get: () => new Promise(() => {}) },
       addEventListener: (type, listener) => listeners.set(type, listener),
     },
   };
@@ -20,6 +21,7 @@ function isIntercepted(request) {
   );
   let intercepted = false;
   listeners.get('fetch')({
+    clientId: 'widget',
     request,
     respondWith: () => {
       intercepted = true;
