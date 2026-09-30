@@ -16,10 +16,12 @@ self.addEventListener('fetch', event => {
   // Use the default browser handling for requests where:
   // - The request method is not GET.
   // - The request is a navigation request.
+  // - The caller explicitly disables caching.
   // - The request is to the same origin as the service worker.
   if (
     event.request.method !== 'GET' ||
     event.request.mode === 'navigate' ||
+    event.request.cache === 'no-store' ||
     new URL(event.request.url).origin === self.location.origin
   ) {
     return;
