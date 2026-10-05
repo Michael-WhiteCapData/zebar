@@ -1,4 +1,5 @@
 [package]
+default-run = "zebar"
 name = "zebar"
 version = "0.0.0"
 description = "Zebar is a tool for creating customizable and cross-platform taskbars, desktop widgets, and popups."
@@ -56,11 +57,13 @@ windows = { workspace = true }
 cocoa = "0.25"
 komorebi-util = { path = "../../crates/komorebi-util" }
 
+[[bin]]
+name = "generate-schema"
+path = "src/bin/generate-schema.rs"
+required-features = ["schema"]
+
 [features]
+schema = []
 # This feature is used for production builds or when `devPath` points to the
 # filesystem. Do not remove!
 custom-protocol = ["tauri/custom-protocol"]
-
-[dev-dependencies]
-jsonschema = { version = "0.46", default-features = false }
-schemars = "1.2"

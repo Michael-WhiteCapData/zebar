@@ -11,8 +11,7 @@
     "dev:local": "pnpm run --filter zebar build && pnpm run --parallel dev:local",
     "format": "prettier --write . && pnpm run -r format",
     "lint": "prettier --check . && pnpm run -r lint",
-    "schema:check": "cargo test -p zebar schema::",
-    "schema:generate": "cargo test -p zebar schema::generate -- --ignored && prettier --write resources/settings-schema.json resources/zpack-schema.json"
+    "schema:generate": "cargo run -p zebar --bin generate-schema --features schema && prettier --write resources/settings-schema.json resources/zpack-schema.json"
   },
   "prettier": "@glzr/style-guide/prettier",
   "dependencies": {},

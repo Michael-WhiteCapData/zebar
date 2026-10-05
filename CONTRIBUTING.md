@@ -48,15 +48,17 @@ JS package for communicating with the Tauri backend. Published to npm as [`zebar
 The JSON schemas in `resources/settings-schema.json` and
 `resources/zpack-schema.json` are generated from the Rust configuration types
 with Schemars. Keep descriptions in Rust doc comments. Schema generation uses
-JSON Schema draft 7 and development dependencies only.
+JSON Schema draft 7.
 
 After changing a configuration type, run `pnpm schema:generate` and commit the
-generated files with the Rust changes. Run `pnpm schema:check` to check for drift
-and validate monitor selection, length serialization, and starter examples.
-These commands require the desktop build prerequisites above. The Windows build
-job runs the same checks in CI.
+generated files with the Rust changes. The generator is a standalone binary
+under `packages/desktop/src/bin`. Shared configuration types live in
+`packages/desktop/src/config_types.rs`.
 
-`LengthValue` uses a string schema because its custom Serde implementation
+The Windows build job regenerates the schemas and uses `git diff --exit-code`
+to detect drift. Generation requires the desktop build prerequisites above.
+
+`LengthValue` uses a string schema because its Serde string conversion
 serializes values such as `100px` and `50%`. It must not expose its internal
 `amount` and `unit` fields as a JSON object.
 
